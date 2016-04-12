@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">A9</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="Rankings">Rankings</string>
+
+    <string name="AddHero">Add Hero</string>
+
+    <string name="hero_one">Hero #1</string>
+    <string name="hero_two">Hero #2</string>
+
+    <string name="Battle">Battle</string>
+    <string name="Fight">FIGHT!</string>
+
+    <string name="Results">Results</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

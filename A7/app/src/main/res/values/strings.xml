@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">A7</string>
+
+    <string name="prompt">Order Freshly Brewed Coffee</string>
+
+    <string name="size">Size</string>
+    <string name="small">Small</string>
+    <string name="medium">Medium</string>
+    <string name="large">Large</string>
+
+    <string name="sugar">Sugar</string>
+    <string name="milk">Milk</string>
+
+    <string name="instructions">Special Instructions</string>
+    
+    <string name="load">Load Favorite</string>
+    <string name="save">Save Favorite</string>
+    <string name="order">Order</string>
+    <string name="clear">Clear</string>
+
+    <string-array name="coffees">
+        <item>Kona</item>
+        <item>Arabica</item>
+        <item>Turkish</item>
+        <item>Irish</item>
+    </string-array>
+
+</resources>

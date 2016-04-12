@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Note Taker</string>
+
+    <string name="save">SAVE NOTE</string>
+    <string name="delete">DELETE NOTE</string>
+</resources>
