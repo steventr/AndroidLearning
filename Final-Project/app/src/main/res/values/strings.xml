@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Presence</string>
+
+    //Login Page
+    <string name="username">email</string>
+    <string name="password">password</string>
+    <string name="signin">Sign in</string>
+    <string name="signup">Sign up</string>
+    <string name="forgot">forgot your password?</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    //Main page
+
+    <string name="signinKiosk">Sign-In Kiosk</string>
+    <string name="manage">Manage classes</string>
+
+    <string name="welcome">Welcome, </string>
+
+</resources>

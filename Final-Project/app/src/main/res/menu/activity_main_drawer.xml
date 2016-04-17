@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_kiosk"
+            android:icon="@drawable/ic_assignment_turned_in_white_24dp"
+            android:title="@string/signinKiosk"/>
+        <item
+            android:id="@+id/nav_manage_current_class"
+            android:icon="@drawable/ic_home_white_24dp"
+            android:title="Current Classroom" />
+        <item
+            android:id="@+id/nav_manage_classes"
+            android:icon="@drawable/ic_people_white_24dp"
+            android:title="Manage Classrooms" />
+        <item
+            android:id="@+id/nav_options"
+            android:icon="@drawable/ic_build_white_24dp"
+            android:title="Options" />
+        <item
+            android:id="@+id/nav_log_out"
+            android:icon="@drawable/ic_reply_white_24dp"
+            android:title="Log Out" />
+    </group>
+
+</menu>
