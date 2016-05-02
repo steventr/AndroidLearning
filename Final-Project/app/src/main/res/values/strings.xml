@@ -21,4 +21,9 @@
 
     <string name="welcome">Welcome, </string>
 
+    //Class Manager
+    <string name="className">Title</string>
+    <string name="classDetail">Details</string>
+    <string name="submit">Add class</string>
+
 </resources>

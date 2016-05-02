@@ -11,8 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
-        android:checkMark="@drawable/ic_check_white_24dp"
-        android:checked="true"/>
+        android:checkMark="@drawable/checked_class"
+        android:checked="false"/>
 
     <LinearLayout
         android:orientation="vertical"
@@ -23,6 +23,7 @@
             android:id="@+id/id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:textSize="16dp"
             android:textColor="@color/colorAccent"
             android:textAppearance="?attr/textAppearanceListItem"

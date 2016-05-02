@@ -11,7 +11,7 @@ public class Account {
     private String uid;
     private String provider;
 
-    private ArrayList<String> classIDs;
+    private ArrayList<Class> classes;
 
 
     public String getName() {
@@ -22,12 +22,12 @@ public class Account {
         this.name = name;
     }
 
-    public ArrayList<String> getClassIDs() {
-        return classIDs;
+    public ArrayList<Class> getClassIDs() {
+        return classes;
     }
 
-    public void setClassIDs(ArrayList<String> classIDs) {
-        this.classIDs = classIDs;
+    public void setClassIDs(ArrayList<Class> classIDs) {
+        this.classes = classIDs;
     }
 
     public String getProvider() {
