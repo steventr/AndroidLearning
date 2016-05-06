@@ -14,34 +14,39 @@ import itp341.truong.steven.presence.Class;
  * <p>
  * TODO: Replace all uses of this class before publishing your app.
  */
-public class DummyContent {
+public class DummyMemberContent {
 
     /**
      * An array of sample (dummy) items.
      */
-    public static final List<Class> ITEMS = new ArrayList<Class>();
+    public static final List<Member> ITEMS = new ArrayList<Member>();
 
     /**
      * A map of sample (dummy) items, by ID.
      */
-    public static final Map<String, Class> ITEM_MAP = new HashMap<String, Class>();
+    public static final Map<String, Member> ITEM_MAP = new HashMap<String, Member>();
 
     private static final int COUNT = 10;
 
     static {
         // Add some sample items.
         for (int i = 1; i <= COUNT; i++) {
+            Member m  = createDummyItem(i);
+            m.pin = 1234;
             addItem(createDummyItem(i));
         }
     }
 
-    private static void addItem(itp341.truong.steven.presence.Class item) {
+    private static void addItem(itp341.truong.steven.presence.Member item) {
         ITEMS.add(item);
-        ITEM_MAP.put(item.id, item);
+        ITEM_MAP.put(item.memberID, item);
     }
 
-    private static Class createDummyItem(int position) {
-        return new Class(String.valueOf(position), "Item " + position);
+    private static Member createDummyItem(int position) {
+        if (position == COUNT) {
+            return new Member("PAST_END");
+        }
+        return new Member("Test");
     }
 
     private static String makeDetails(int position) {
@@ -51,25 +56,5 @@ public class DummyContent {
             builder.append("\nMore details information here.");
         }
         return builder.toString();
-    }
-
-    /**
-     * A dummy item representing a piece of content.
-     */
-    public static class DummyItem {
-        public final String id;
-        public final String content;
-        public final String details;
-
-        public DummyItem(String id, String content, String details) {
-            this.id = id;
-            this.content = content;
-            this.details = details;
-        }
-
-        @Override
-        public String toString() {
-            return content;
-        }
     }
 }

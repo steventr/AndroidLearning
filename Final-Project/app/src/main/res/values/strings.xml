@@ -24,6 +24,15 @@
     //Class Manager
     <string name="className">Title</string>
     <string name="classDetail">Details</string>
-    <string name="submit">Add class</string>
+    <string name="submit">Save class</string>
+    <string name="delete">Remove class</string>
+
+    //Member Manager
+    <string name="memberName">Name</string>
+    <string name="memberDetail">Details</string>
+    <string name="parentConfirm">Is a parent?</string>
+    <string name="submitMember">Save class</string>
+    <string name="deleteMember">Remove class</string>
+
 
 </resources>

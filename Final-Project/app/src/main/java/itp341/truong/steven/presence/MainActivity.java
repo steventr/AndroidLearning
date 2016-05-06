@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,22 +17,31 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-import itp341.truong.steven.presence.ClassFragment.OnListFragmentInteractionListener;
-import itp341.truong.steven.presence.dummy.DummyContent;
+import java.util.ArrayList;
+import java.util.List;
+
+import itp341.truong.steven.presence.ClassesInfoFragment.OnListFragmentInteractionListener;
 
 public class MainActivity extends AppCompatActivity implements OnListFragmentInteractionListener , NavigationView.OnNavigationItemSelectedListener {
 
     private String currentUserID;
     private User currentUser;
+
+    private List<String> currentUserClassesIDs; //Array of classes, but just the IDs for now
+    private ArrayList<Class> currentUserClasses;
+
     private Firebase firebaseUserRef;
+
+    private ValueEventListener firebaseUserRefListener;
+
+    private android.support.v4.app.FragmentManager fragmentManager;
+    private Fragment currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +49,9 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
         setContentView(R.layout.activity_main);
         initializeReferences();
 
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-        android.support.v4.app.Fragment fragment = new ClassFragment();
-        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+        fragmentManager = getSupportFragmentManager();
+        currentFragment = ClassesInfoFragment.newInstance(currentUserID);
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, currentFragment, "classfragment").commit();
     }
 
 
@@ -58,8 +68,12 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        currentUserClassesIDs = new ArrayList<String>();
+        currentUserClasses = new ArrayList<Class>();
+
         Intent i = getIntent();
         currentUserID = i.getStringExtra("uid");
+
         if (currentUserID == null || currentUserID.length() == 0) {
             finish();
         }
@@ -73,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+            firebaseUserRef.removeEventListener(firebaseUserRefListener);
+            fragmentManager.beginTransaction().remove(currentFragment).commit();
         }
 
     }
@@ -108,8 +124,13 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
         } else if (id == R.id.nav_manage_current_class) {
 
         } else if (id == R.id.nav_manage_classes) {
-            android.support.v4.app.Fragment fragment = new ClassFragment();
-            fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+            if (currentFragment instanceof ClassesInfoFragment) {
+
+            }
+            else {
+                android.support.v4.app.Fragment fragment = new ClassesInfoFragment();
+                fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+            }
         } else if (id == R.id.nav_options) {
 
         }
@@ -119,12 +140,14 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
         return true;
     }
     void loadAccount(String currentID) {
-        firebaseUserRef = new Firebase("https://presence-manager.firebaseio.com/users/"+currentID);
+        firebaseUserRef = new Firebase(FirebaseConstants.USERS +currentID);
         currentUser = new User();
         currentUser.setUid(currentID);
-        firebaseUserRef.addValueEventListener(new ValueEventListener() {
+
+        firebaseUserRefListener = new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
+
                 ((TextView) findViewById(R.id.email)).setText(dataSnapshot.child("email").getValue().toString());
 
 
@@ -148,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
                             currentUser.setName(input.getText().toString());
                             ((TextView) findViewById(R.id.initialMessage)).setText(getString(R.string.welcome) + " " + input.getText().toString() + "!");
                             ((TextView) findViewById(R.id.nameHeader)).setText(input.getText().toString());
-                            firebaseUserRef.child("name").setValue(input.getText().toString());
+                            firebaseUserRef.child(FirebaseConstants.USERS_NAME_KEY).setValue(input.getText().toString());
                         }
                     });
 
@@ -158,55 +181,81 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
                     ((TextView) findViewById(R.id.nameHeader)).setText(nameNode.toString());
                     ((TextView) findViewById(R.id.initialMessage)).setText(getString(R.string.welcome) + " " + nameNode.toString() + "!");
                 }
-
-                loadClasses(currentUserID);
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
 
             }
-        });
+        };
+
+        firebaseUserRef.addValueEventListener(firebaseUserRefListener);
+
     }
 
-    void loadClasses(String currentID) {
-        firebaseUserRef.child("classes").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-    }
 
     @Override
     public void onListFragmentInteraction(Class item) {
-        //Log.d("Test", "LI Pressed");
+        Log.d("Test", item.name + "LI Pressed");
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("Test", "REQ CODE: " + requestCode + " RESULT CODE: " + resultCode);
+
+        switch(requestCode) {
+            case 1:
+                if (resultCode != RESULT_CANCELED) {
+                    ActivityConstants.Actions action = (ActivityConstants.Actions) data.getSerializableExtra("action");
+                    switch (action) {
+                        case CREATE:
+                            addClass(data.getStringExtra("name"), data.getStringExtra("detail"));
+                            break;
+                        case UPDATE:
+                            Log.d("UPDATE", "UPDATE TRIGGERED");
+                            updateClass(data.getStringExtra("classID"), data.getStringExtra("name"), data.getStringExtra("detail"));
+                            break;
+                        case DELETE:
+                            Log.d("Delete", "DELETE TRIGGERED");
+                            deleteClass(data.getStringExtra("classID"));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                break;
+            default:
+                Log.d("Test", "REQ CODE: " + requestCode + " RESULT CODE: " + resultCode);
+        }
+    }
+
+    protected void addClass(String name, String detail) {
+        Firebase ref = new Firebase(FirebaseConstants.CLASSES);
+        ref = ref.push();
+        ref.child("name").setValue(name);
+        ref.child("detail").setValue(detail);
+        ref.child("owners").child(currentUserID).setValue(currentUserID);
+        firebaseUserRef.child("classes").child(ref.getKey()).setValue(ref.getKey());
+    }
+
+    protected void updateClass(String id, String name, String detail) {
+        Firebase classesRef = new Firebase(FirebaseConstants.CLASSES + id);
+        classesRef.child("name").setValue(name);
+        classesRef.child("detail").setValue(detail);
+        if (currentFragment instanceof ClassesInfoFragment) {
+            ((ClassesInfoFragment) currentFragment).updateClassFromID(id);
+        }
+    }
+
+    protected  void deleteClass(String id) {
+        //Remove the class instance
+        Firebase classesRef = new Firebase(FirebaseConstants.CLASSES + id);
+        classesRef.removeValue();
+
+        //Remove the class from the owners' list of classes
+        Firebase userClassRef = new Firebase(FirebaseConstants.USERS + "/" +currentUserID + "/" + FirebaseConstants.USERS_CLASSES_KEY + "/" + id);
+        userClassRef.removeValue();
     }
 
 }

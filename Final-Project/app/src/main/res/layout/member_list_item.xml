@@ -1,24 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:layout_marginBottom="4dp"
     android:background="@drawable/border_white">
 
-    <CheckedTextView
-        android:id="@+id/selectedClassesFragmentCheckedTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:checkMark="@drawable/checked_class"
-        android:checked="false"/>
+    <com.github.ivbaranov.mli.MaterialLetterIcon
+        android:id="@+id/icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="8dp"
+        app:mli_shape_color="@color/orange"
+        app:mli_letter_color="@color/colorAccent"
+        app:mli_letter="ST"  />
+
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="8dp"
         android:layout_gravity="center_vertical">
+
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
@@ -28,6 +36,7 @@
             android:textColor="@color/colorAccent"
             android:textAppearance="?attr/textAppearanceListItem"
             />
+
         <TextView
             android:id="@+id/detail"
             android:layout_width="wrap_content"
@@ -35,6 +44,7 @@
             android:textSize="12dp"
             android:textColor="@color/colorSubtext"
             android:textAppearance="?attr/textAppearanceListItemSmall" />
+
     </LinearLayout>
 
 </LinearLayout>

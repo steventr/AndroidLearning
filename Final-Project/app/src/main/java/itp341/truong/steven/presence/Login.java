@@ -79,7 +79,7 @@ public class Login extends AppCompatActivity {
                         @Override
                         public void onSuccess(Map<String, Object> result) {
                             Firebase ref = new Firebase("https://presence-manager.firebaseio.com/users/"+result.get("uid").toString());
-                            ref.child("email").setValue(usernameEditText.getText().toString());
+                            ref.child(FirebaseConstants.USERS_EMAIL_KEY).setValue(usernameEditText.getText().toString());
 
                             Intent i = new Intent(getApplication(), MainActivity.class);
                             i.putExtra("uid", result.get("uid").toString());

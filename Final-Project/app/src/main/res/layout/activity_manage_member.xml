@@ -50,27 +50,20 @@
             android:layout_weight="4"/>
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/member_list"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        app:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/fragment_class_list_item" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal">
         <Button
-            android:id="@+id/submitNewClass"
+            android:id="@+id/submitNewMember"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/submit"/>
+            android:text="@string/submitMember"/>
         <Button
-            android:id="@+id/removeClass"
+            android:id="@+id/removeMember"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/delete"/>
+            android:text="@string/deleteMember"/>
     </LinearLayout>
 
 
