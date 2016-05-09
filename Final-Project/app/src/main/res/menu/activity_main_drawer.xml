@@ -12,8 +12,12 @@
             android:title="Current Classroom" />
         <item
             android:id="@+id/nav_manage_classes"
-            android:icon="@drawable/ic_people_white_24dp"
+            android:icon="@drawable/ic_class_white_24dp"
             android:title="Manage Classrooms" />
+        <item
+            android:id="@+id/nav_manage_students"
+            android:icon="@drawable/ic_people_white_24dp"
+            android:title="Manage Students" />
         <item
             android:id="@+id/nav_options"
             android:icon="@drawable/ic_build_white_24dp"
@@ -22,6 +26,7 @@
             android:id="@+id/nav_log_out"
             android:icon="@drawable/ic_reply_white_24dp"
             android:title="Log Out" />
+
     </group>
 
 </menu>

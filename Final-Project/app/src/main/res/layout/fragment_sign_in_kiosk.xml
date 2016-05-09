@@ -1,0 +1,67 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="itp341.truong.steven.presence.SignInKioskFragment">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:text="Enter your pin:"
+            android:textColor="@color/colorAccent"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/firstPinNumber"
+                android:numeric="integer"
+                android:textColor="@color/colorAccent"
+                android:layout_width="wrap_content"
+                android:maxLength="1"
+                android:layout_marginRight="2dp"
+                android:layout_height="wrap_content"
+                android:nextFocusForward="@+id/secondPinNumber"/>
+            <EditText
+                android:id="@+id/secondPinNumber"
+                android:numeric="integer"
+                android:textColor="@color/colorAccent"
+                android:layout_marginRight="2dp"
+                android:layout_width="wrap_content"
+                android:maxLength="1"
+                android:layout_height="wrap_content"
+                android:nextFocusForward="@+id/thirdPinNumber"/>
+            <EditText
+                android:id="@+id/thirdPinNumber"
+                android:numeric="integer"
+                android:layout_marginRight="2dp"
+                android:textColor="@color/colorAccent"
+                android:layout_width="wrap_content"
+                android:maxLength="1"
+                android:layout_height="wrap_content"
+                android:nextFocusForward="@+id/fourthPinNumber"/>
+            <EditText
+                android:id="@+id/fourthPinNumber"
+                android:numeric="integer"
+                android:layout_marginRight="2dp"
+                android:textColor="@color/colorAccent"
+                android:layout_width="wrap_content"
+                android:maxLength="1"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

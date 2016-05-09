@@ -16,10 +16,12 @@ public class Class implements Parcelable {
 
     public boolean isSelected;
 
+    public ArrayList<String> meetingDays;
     public List<Member> students;
 
     public Class() {
-        List<Member> students = new ArrayList<Member>();
+        meetingDays = new ArrayList<String>();
+        students = new ArrayList<Member>();
     }
 
     public Class(String id, String details) {
@@ -27,7 +29,8 @@ public class Class implements Parcelable {
         this.details = details;
         this.isSelected = false;
 
-        List<Member> students = new ArrayList<Member>();
+        meetingDays = new ArrayList<String>();
+        students = new ArrayList<Member>();
     }
 
 
@@ -36,6 +39,12 @@ public class Class implements Parcelable {
         name = in.readString();
         details = in.readString();
         isSelected = in.readByte() != 0x00;
+        if (in.readByte() == 0x01) {
+            meetingDays = new ArrayList<String>();
+            in.readList(meetingDays, String.class.getClassLoader());
+        } else {
+            meetingDays = null;
+        }
         if (in.readByte() == 0x01) {
             students = new ArrayList<Member>();
             in.readList(students, Member.class.getClassLoader());
@@ -55,6 +64,12 @@ public class Class implements Parcelable {
         dest.writeString(name);
         dest.writeString(details);
         dest.writeByte((byte) (isSelected ? 0x01 : 0x00));
+        if (meetingDays == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(meetingDays);
+        }
         if (students == null) {
             dest.writeByte((byte) (0x00));
         } else {

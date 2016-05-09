@@ -12,9 +12,14 @@ public class Member implements Parcelable {
 
     public String memberID;
     public String name;
-    public int pin;
+    public String pin;
+
     public boolean isParent;
     public ArrayList<String> children;
+
+    public Member() {
+
+    }
 
     public Member(String id) {
         memberID = id;

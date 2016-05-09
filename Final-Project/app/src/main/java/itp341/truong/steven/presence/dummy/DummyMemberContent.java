@@ -32,7 +32,7 @@ public class DummyMemberContent {
         // Add some sample items.
         for (int i = 1; i <= COUNT; i++) {
             Member m  = createDummyItem(i);
-            m.pin = 1234;
+            m.pin = "1234";
             addItem(createDummyItem(i));
         }
     }

@@ -11,4 +11,5 @@ public class FirebaseConstants {
     public static final String USERS_EMAIL_KEY = "email";
 
     public static final String CLASSES = "https://presence-manager.firebaseio.com/classes/";
+    public static final String MEMBERS = "https://presence-manager.firebaseio.com/members/";
 }

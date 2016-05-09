@@ -16,6 +16,7 @@ import com.github.ivbaranov.mli.MaterialLetterIcon;
 import itp341.truong.steven.presence.ClassesInfoFragment.OnListFragmentInteractionListener;
 import itp341.truong.steven.presence.dummy.DummyContent.DummyItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.view.View.*;
@@ -31,9 +32,13 @@ public class MemberRecyclerViewAdapter extends RecyclerView.Adapter<MemberRecycl
     private final List<Member> mValues;
 
     private int mCheckedPosition;
+    private ArrayList<String> usedPins;
+    private String currentClass;
 
-    public MemberRecyclerViewAdapter(List<Member> members) {
+    public MemberRecyclerViewAdapter(List<Member> members, String classID) {
+
         mValues = members;
+        currentClass = classID;
 
         if (mValues.size() == 0) {
             mValues.add(new Member("PAST_END"));
@@ -66,13 +71,25 @@ public class MemberRecyclerViewAdapter extends RecyclerView.Adapter<MemberRecycl
 
             holder.mTitleView.setText("Add class member");
             holder.mTitleView.setTextAlignment(TEXT_ALIGNMENT_CENTER);
-            holder.mDetailView.setVisibility(GONE);
+            holder.mDetailView.setVisibility(INVISIBLE);
 
             holder.mView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //Adding a new class member
                     Intent i = new Intent(context, ManageMemberActivity.class);
+                    i.putExtra("newmember", true);
+                    i.putExtra("classID", currentClass);
+
+                    usedPins = new ArrayList<String>();
+
+                    for (Member m : mValues) {
+                        if (m.memberID != "PAST_END") {
+                            usedPins.add(m.pin);
+                        }
+                    }
+                    i.putStringArrayListExtra("usedPins", usedPins);
+
                     ((Activity) context).startActivityForResult(i, ActivityConstants.Activities.MANAGE_CLASS_MEMBER_ACTIVITY.toInteger());
                 }
             });
@@ -80,18 +97,36 @@ public class MemberRecyclerViewAdapter extends RecyclerView.Adapter<MemberRecycl
        else {
             //Icon color
             int[] colors = context.getResources().getIntArray(R.array.androidcolors);
+            ((MaterialLetterIcon) holder.mView.findViewById(R.id.icon)).setLettersNumber(2);
             ((MaterialLetterIcon) holder.mView.findViewById(R.id.icon)).setShapeColor(colors[position % colors.length]);
-            ((MaterialLetterIcon) holder.mView.findViewById(R.id.icon)).setLetter("AA");
+            ((MaterialLetterIcon) holder.mView.findViewById(R.id.icon)).setLetter(holder.mItem.name.substring(0,1).toUpperCase());
 
-            holder.mTitleView.setText(mValues.get(position).memberID);
+            holder.mTitleView.setText(mValues.get(position).name);
             holder.mDetailView.setText(String.valueOf(mValues.get(position).pin));
 
-            holder.mView.setOnClickListener(new OnClickListener() {
+            holder.mView.setOnLongClickListener(new OnLongClickListener() {
                 @Override
-                public void onClick(View v) {
+                public boolean onLongClick(View v) {
                     //Go to new activity to add a class...
                     Intent i = new Intent(context, ManageMemberActivity.class);
+                    i.putExtra("newmember", false);
+                    i.putExtra("classID", currentClass);
+                    i.putExtra("memberID", holder.mItem.memberID);
+                    i.putExtra("name", holder.mItem.name);
+                    i.putExtra("pin", holder.mItem.pin);
+
+                    usedPins = new ArrayList<String>();
+
+                    for (Member m : mValues) {
+                        if (m.memberID != "PAST_END") {
+                            usedPins.add(m.pin);
+                        }
+                    }
+                    i.putStringArrayListExtra("usedPins", usedPins);
+
+
                     ((Activity) context).startActivityForResult(i, ActivityConstants.Activities.MANAGE_CLASS_MEMBER_ACTIVITY.toInteger());
+                    return false;
                 }
             });
         }

@@ -134,7 +134,7 @@ public class ClassesInfoFragment extends Fragment {
 
     void loadClasses(String currentID) {
         Firebase.setAndroidContext(getContext());
-        firebaseUserRef = new Firebase(FirebaseConstants.USERS + "/" + currentID);
+        firebaseUserRef = new Firebase(FirebaseConstants.USERS + currentID);
         firebaseUserRef.child("classes").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -178,9 +178,9 @@ public class ClassesInfoFragment extends Fragment {
         firebaseClassRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("UPDATECLASSFROMID", "UPDATING");
                 finalClassToUpdate.name = dataSnapshot.child("name").getValue().toString();
                 finalClassToUpdate.details = dataSnapshot.child("detail").getValue().toString();
+                finalClassToUpdate.meetingDays = (ArrayList<String>) dataSnapshot.child("meeting_days").getValue();
                 adapter.notifyDataSetChanged();
                 summaryText.setText(summaryText());
             }
@@ -218,6 +218,8 @@ public class ClassesInfoFragment extends Fragment {
                 c.id = id;
                 c.name = dataSnapshot.child("name").getValue().toString();
                 c.details = dataSnapshot.child("detail").getValue().toString();
+                c.meetingDays = (ArrayList<String>) dataSnapshot.child("meeting_days").getValue();
+
                 mClasses.add(c);
                 adapter.notifyDataSetChanged();
                 summaryText.setText(summaryText());

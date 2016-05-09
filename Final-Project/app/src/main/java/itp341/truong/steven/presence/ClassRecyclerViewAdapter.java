@@ -67,6 +67,7 @@ public class ClassRecyclerViewAdapter extends RecyclerView.Adapter<ClassRecycler
                     //Go to new activity to add a class...
                     Intent i = new Intent(context,ManageClassActivity.class);
                     i.putExtra("newclass", true);
+                    i.putExtra("classID", mValues.get(position).id);
                     ((Activity) context).startActivityForResult(i, ActivityConstants.Activities.MANAGE_CLASS_ACTIVITY.toInteger());
                 }
             });
@@ -78,7 +79,17 @@ public class ClassRecyclerViewAdapter extends RecyclerView.Adapter<ClassRecycler
         }
         else {
             holder.mTitleView.setText(mValues.get(position).name);
-            holder.mDetailView.setText(mValues.get(position).details);
+
+            String meetingDays = "Meets on: ";
+            for (int i = 0; i < holder.mItem.meetingDays.size(); i++) {
+                if ( i == holder.mItem.meetingDays.size() - 1) {
+                    meetingDays += holder.mItem.meetingDays.get(i);
+                }
+                else {
+                    meetingDays += holder.mItem.meetingDays.get(i) + ", ";
+                }
+            }
+            holder.mDetailView.setText(meetingDays);
 
             holder.mView.setOnLongClickListener(new OnLongClickListener() {
                 @Override
@@ -88,7 +99,9 @@ public class ClassRecyclerViewAdapter extends RecyclerView.Adapter<ClassRecycler
                     i.putExtra("name", mValues.get(position).name);
                     i.putExtra("classID", mValues.get(position).id);
                     i.putExtra("details", mValues.get(position).details);
+                    i.putExtra("meeting_days", mValues.get(position).meetingDays);
                     i.putExtra("newclass", false);
+
                     ((Activity) context).startActivityForResult(i, ActivityConstants.Activities.MANAGE_CLASS_ACTIVITY.toInteger());
                     return false;
                 }
@@ -100,9 +113,11 @@ public class ClassRecyclerViewAdapter extends RecyclerView.Adapter<ClassRecycler
                     if (position == mCheckedPosition) {
                         holder.mItem.isSelected = false;
                         mCheckedPosition = -1;
+                        ((MainActivity) context).setCurrentClassID(null);
                     }
                     else {
                         mCheckedPosition = position;
+                        ((MainActivity) context).setCurrentClassID(holder.mItem.id);
                         notifyDataSetChanged();
                     }
                 }
