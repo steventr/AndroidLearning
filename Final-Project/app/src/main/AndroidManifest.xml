@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
+            android:screenOrientation="portrait"
             android:name=".Login"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
@@ -21,10 +22,15 @@
             </intent-filter>
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".ManageClassActivity"></activity>
-        <activity android:name=".ManageMemberActivity"></activity>
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".ManageClassActivity"></activity>
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".ManageMemberActivity"></activity>
     </application>
 
 </manifest>

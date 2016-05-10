@@ -113,7 +113,7 @@ public class CurrentClassStatsFragment extends Fragment {
                 else {
                     Divider = 1;
                 }
-                
+
                 classRef.child("students").addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
