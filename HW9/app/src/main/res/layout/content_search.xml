@@ -12,4 +12,30 @@
     tools:context="csci571.truong.steven.hw9.Search"
     tools:showIn="@layout/app_bar_search">
 
+    <EditText
+        android:id="@+id/searchInput"
+        android:layout_width="match_parent"
+        android:layout_height="55dp" />
+
+    <LinearLayout
+        android:layout_below="@id/searchInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="SEARCH"
+            android:onClick="submitSearch"/>
+
+        <Button
+            android:id="@+id/clear_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="CLEAR"/>
+
+    </LinearLayout>
 </RelativeLayout>
