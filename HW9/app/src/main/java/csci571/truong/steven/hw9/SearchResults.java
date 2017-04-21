@@ -1,5 +1,6 @@
 package csci571.truong.steven.hw9;
 
+import android.graphics.Color;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -8,11 +9,8 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import csci571.truong.steven.hw9.dummy.DummyContent;
 import csci571.truong.steven.hw9.models.SearchResultObject;
+import csci571.truong.steven.hw9.models.SearchType;
 
 public class SearchResults extends AppCompatActivity implements TabLayout.OnTabSelectedListener, SearchFragmentPage.OnListFragmentInteractionListener{
     //This is our tablayout
@@ -29,7 +27,7 @@ public class SearchResults extends AppCompatActivity implements TabLayout.OnTabS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new SearchPageAdapter(getSupportFragmentManager());
+        adapter = new SearchPageAdapter(getSupportFragmentManager(), this);
 
         setContentView(R.layout.activity_search_results);
         new SearchTask(this, adapter).execute(getIntent().getStringExtra(Search.SEARCH_QUERY));
@@ -39,7 +37,6 @@ public class SearchResults extends AppCompatActivity implements TabLayout.OnTabS
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        toolbar.setTitle("Results");
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager = (ViewPager) findViewById(R.id.results_view);
@@ -51,17 +48,17 @@ public class SearchResults extends AppCompatActivity implements TabLayout.OnTabS
         tabLayout.setOnTabSelectedListener(this);
 
         //Adding the tabs using addTab() method
-        tabLayout.addTab(tabLayout.newTab().setText("Users"));
-        tabLayout.addTab(tabLayout.newTab().setText("Pages"));
-        tabLayout.addTab(tabLayout.newTab().setText("Events"));
-        tabLayout.addTab(tabLayout.newTab().setText("Places"));
-        tabLayout.addTab(tabLayout.newTab().setText("Groups"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.setBackgroundColor(Color.WHITE);
+        tabLayout.setTabTextColors(Color.BLACK, Color.BLACK);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
+
+        setupTabIcons();
     }
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         Log.d("TEST", "TAB SELECTED " + tab.getPosition());
+        adapter.setCurrentTab(SearchType.fromInteger(tab.getPosition()));
         viewPager.setCurrentItem(tab.getPosition());
     }
 
@@ -76,7 +73,14 @@ public class SearchResults extends AppCompatActivity implements TabLayout.OnTabS
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onListFragmentInteraction(SearchResultObject searchResult) {
 
+    }
+
+    public void setupTabIcons() {
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+            TabLayout.Tab tab = tabLayout.getTabAt(i);
+            tab.setCustomView(adapter.getTabView(i));
+        }
     }
 }

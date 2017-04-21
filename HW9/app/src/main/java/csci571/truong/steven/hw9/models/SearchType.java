@@ -5,7 +5,7 @@ package csci571.truong.steven.hw9.models;
  */
 
 public enum SearchType {
-    USER, PAGE, EVENTS, PLACE, GROUP;
+    USER, PAGE, EVENT, PLACE, GROUP;
 
     public static String toString(SearchType type) {
         switch (type) {
@@ -13,7 +13,7 @@ public enum SearchType {
                 return "user";
             case PAGE:
                 return "page";
-            case EVENTS:
+            case EVENT:
                 return "event";
             case PLACE:
                 return "place";
@@ -29,7 +29,7 @@ public enum SearchType {
                 return 0;
             case PAGE:
                 return 1;
-            case EVENTS:
+            case EVENT:
                 return 2;
             case PLACE:
                 return 3;
@@ -37,6 +37,23 @@ public enum SearchType {
                 return 4;
             default:
                 return -1;
+        }
+    }
+
+    public static SearchType fromInteger(int i) {
+        switch (i) {
+            case 0:
+                return USER;
+            case 1:
+                return PAGE;
+            case 2:
+                return EVENT;
+            case 3:
+                return PLACE;
+            case 4:
+                return GROUP;
+            default:
+                return USER;
         }
     }
 }

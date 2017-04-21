@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class Search extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -96,7 +97,11 @@ public class Search extends AppCompatActivity implements NavigationView.OnNaviga
         Intent intent = new Intent(this, SearchResults.class);
         EditText editText = (EditText) findViewById(R.id.searchInput);
         String message = editText.getText().toString();
-        intent.putExtra(Search.SEARCH_QUERY, Search.ENDPOINT);
+        if (message.isEmpty()) {
+            Toast.makeText(this, "Please enter a keyword!", Toast.LENGTH_LONG).show();
+            return;
+        }
+        intent.putExtra(Search.SEARCH_QUERY, message);
         startActivity(intent);
     }
 }

@@ -1,43 +1,49 @@
 package csci571.truong.steven.hw9;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import csci571.truong.steven.hw9.SearchFragmentPage.OnListFragmentInteractionListener;
-import csci571.truong.steven.hw9.dummy.DummyContent.DummyItem;
+import csci571.truong.steven.hw9.models.SearchResultObject;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
+
 public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private Context mContext;
+    private final List<SearchResultObject> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyItemRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public MyItemRecyclerViewAdapter(List<SearchResultObject> items, Context context, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
+        mContext = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_searchresult, parent, false);
+
+
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mContentView.setText(mValues.get(position).content);
-
+        holder.mContentView.setText(mValues.get(position).getName());
+        Picasso.with(mContext).load(mValues.get(position).getPicture().getData().getUrl()).into((ImageView) holder.mView.findViewById(R.id.profilePicture));
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,6 +52,31 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
                     // fragment is attached to one) that an item has been selected.
                     mListener.onListFragmentInteraction(holder.mItem);
                 }
+            }
+        });
+
+        ImageView favoritesButton = (ImageView) holder.mView.findViewById(R.id.favoriteIcon);
+        favoritesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImageView imageView = (ImageView) v;
+                if (imageView.getDrawable().getConstantState() == v.getResources().getDrawable(R.drawable.favorites_on).getConstantState())
+                {
+                    imageView.setImageDrawable( v.getResources().getDrawable(R.drawable.favorites_off));
+                }
+                else {
+                    imageView.setImageDrawable( v.getResources().getDrawable(R.drawable.favorites_on));
+                }
+            }
+        });
+
+        ImageView detailsButton = (ImageView) holder.mView.findViewById(R.id.detailsChevron);
+        detailsButton.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, DetailsActivity.class);
+                intent.putExtra(Search.SEARCH_QUERY, Search.ENDPOINT);
+                mContext.startActivity(intent);
             }
         });
     }
@@ -58,7 +89,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public SearchResultObject mItem;
 
         public ViewHolder(View view) {
             super(view);

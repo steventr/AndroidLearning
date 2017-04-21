@@ -10,10 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import csci571.truong.steven.hw9.dummy.DummyContent;
-import csci571.truong.steven.hw9.dummy.DummyContent.DummyItem;
 import csci571.truong.steven.hw9.models.SearchResultObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,12 +28,15 @@ public class SearchFragmentPage extends Fragment  {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private List<SearchResultObject> mData;
+    private MyItemRecyclerViewAdapter mAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
     public SearchFragmentPage() {
+        mData = new ArrayList<SearchResultObject>();
     }
 
     // TODO: Customize parameter initialization
@@ -44,6 +46,7 @@ public class SearchFragmentPage extends Fragment  {
         Bundle args = new Bundle();
         //args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
+        fragment.mData = pageResults;
         return fragment;
     }
 
@@ -70,7 +73,9 @@ public class SearchFragmentPage extends Fragment  {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            mAdapter =  new MyItemRecyclerViewAdapter(mData, getActivity(), mListener);
+            recyclerView.setAdapter(mAdapter);
+
         }
         return view;
     }
@@ -105,6 +110,6 @@ public class SearchFragmentPage extends Fragment  {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(SearchResultObject item);
     }
 }

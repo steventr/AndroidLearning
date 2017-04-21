@@ -1,26 +1,13 @@
 package csci571.truong.steven.hw9;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.EditText;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.json.JSONObject;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -36,7 +23,14 @@ import csci571.truong.steven.hw9.models.SearchType;
  * Created by Steven on 4/17/2017.
  */
 
-public class SearchTask extends AsyncTask<String, String, String> {
+public class SearchTask extends AsyncTask<String, String, String[]> {
+
+    private String[] endpoints = {"https://csci-571-162702.appspot.com/main.php?type=user&query=",
+            "https://csci-571-162702.appspot.com/main.php?type=page&query=",
+            "https://csci-571-162702.appspot.com/main.php?type=event&query=",
+            "https://csci-571-162702.appspot.com/main.php?type=place&query=",
+            "https://csci-571-162702.appspot.com/main.php?type=group&query="
+    };
 
     private Context context;
     private SearchPageAdapter adapter;
@@ -52,15 +46,15 @@ public class SearchTask extends AsyncTask<String, String, String> {
     }
 
     @Override
-    protected String doInBackground(String... args) {
+    protected String[] doInBackground(String... args) {
+        String[] resultJSONs = new String[5];
 
-        StringBuilder result = new StringBuilder();
-
-        for (String arg : args) {
+        for (int i = 0; i < 5; i++) {
+            StringBuilder result = new StringBuilder();
             URL url;
             HttpURLConnection urlConnection = null;
             try {
-                url = new URL(arg);
+                url = new URL(endpoints[i] + args[0]);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 InputStream in = urlConnection.getInputStream();
 
@@ -70,6 +64,8 @@ public class SearchTask extends AsyncTask<String, String, String> {
                 while ((line = reader.readLine()) != null) {
                     result.append(line);
                 }
+
+                resultJSONs[i] = result.toString();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -79,23 +75,28 @@ public class SearchTask extends AsyncTask<String, String, String> {
             }
         }
 
-        return result.toString();
+        return resultJSONs;
     }
 
     @Override
-    protected void onPostExecute(String json) {
-        JsonElement jelement = new JsonParser().parse(json);
-        JsonObject jobject = jelement.getAsJsonObject();
-        JsonArray resultsJsonArray = jobject.getAsJsonArray("data");
-        String result = resultsJsonArray.toString();
+    protected void onPostExecute(String[] responseJSONs) {
+        ArrayList<SearchResultObject[]> response = new ArrayList<SearchResultObject[]>();
+        for (String json : responseJSONs) {
+            JsonElement jelement = new JsonParser().parse(json);
+            JsonObject jobject = jelement.getAsJsonObject();
+            JsonArray resultsJsonArray = jobject.getAsJsonArray("data");
+            String result = resultsJsonArray.toString();
 
-        SearchResultObject[] test = SearchResultObject.parseJSON(result);
-        for (SearchResultObject object : test) {
-            Log.d("TEST", object.toString());
+            response.add(SearchResultObject.parseJSON(result));
         }
 
-        adapter.updateResults(SearchType.USER, Arrays.asList(test));
+        adapter.updateResults(SearchType.USER, Arrays.asList(response.get(0)));
+        adapter.updateResults(SearchType.PAGE, Arrays.asList(response.get(1)));
+        adapter.updateResults(SearchType.EVENT, Arrays.asList(response.get(2)));
+        adapter.updateResults(SearchType.PLACE, Arrays.asList(response.get(3)));
+        adapter.updateResults(SearchType.GROUP, Arrays.asList(response.get(4)));
         adapter.notifyDataSetChanged();
+        ((SearchResults) context).setupTabIcons();
     }
 }
 
