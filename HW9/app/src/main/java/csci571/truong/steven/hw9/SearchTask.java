@@ -26,8 +26,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import csci571.truong.steven.hw9.models.SearchResultObject;
+import csci571.truong.steven.hw9.models.SearchType;
 
 /**
  * Created by Steven on 4/17/2017.
@@ -36,9 +39,11 @@ import csci571.truong.steven.hw9.models.SearchResultObject;
 public class SearchTask extends AsyncTask<String, String, String> {
 
     private Context context;
+    private SearchPageAdapter adapter;
 
-    public SearchTask(Context context) {
+    public SearchTask(Context context, SearchPageAdapter adapter) {
         this.context = context;
+        this.adapter = adapter;
     }
 
     @Override
@@ -89,11 +94,8 @@ public class SearchTask extends AsyncTask<String, String, String> {
             Log.d("TEST", object.toString());
         }
 
-        Intent intent = new Intent((Search) context, SearchResults.class);
-        EditText editText = (EditText) ((Search) context).findViewById(R.id.searchInput);
-        String message = editText.getText().toString();
-        intent.putExtra(Search.SEARCH_QUERY, message);
-        ((Search) context).startActivity(intent);
+        adapter.updateResults(SearchType.USER, Arrays.asList(test));
+        adapter.notifyDataSetChanged();
     }
 }
 

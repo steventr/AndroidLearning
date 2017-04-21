@@ -8,17 +8,31 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
 
-public class SearchResults extends AppCompatActivity implements TabLayout.OnTabSelectedListener{
+import java.util.ArrayList;
+import java.util.List;
+
+import csci571.truong.steven.hw9.dummy.DummyContent;
+import csci571.truong.steven.hw9.models.SearchResultObject;
+
+public class SearchResults extends AppCompatActivity implements TabLayout.OnTabSelectedListener, SearchFragmentPage.OnListFragmentInteractionListener{
     //This is our tablayout
     private TabLayout tabLayout;
 
     //This is our viewPager
     private ViewPager viewPager;
 
+    private SearchPageAdapter adapter;
+
+    public SearchResults() {
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        adapter = new SearchPageAdapter(getSupportFragmentManager());
+
         setContentView(R.layout.activity_search_results);
+        new SearchTask(this, adapter).execute(getIntent().getStringExtra(Search.SEARCH_QUERY));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -29,7 +43,7 @@ public class SearchResults extends AppCompatActivity implements TabLayout.OnTabS
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager = (ViewPager) findViewById(R.id.results_view);
-        viewPager.setAdapter(new SearchPageAdapter(getSupportFragmentManager()));
+        viewPager.setAdapter(adapter);
 
         // Give the TabLayout the ViewPager
         tabLayout = (TabLayout) findViewById(R.id.results_selection);
@@ -58,6 +72,11 @@ public class SearchResults extends AppCompatActivity implements TabLayout.OnTabS
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
 
     }
 }

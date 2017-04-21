@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:theme="@style/AppTheme.AppBarOverlay">
-
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -23,7 +22,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
-
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
@@ -31,5 +29,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/previousButton"
+            android:layout_weight="0.5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="PREV"/>
+        <Button
+            android:id="@+id/nextButton"
+            android:layout_weight="0.5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="NEXT"/>
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

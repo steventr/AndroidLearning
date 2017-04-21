@@ -23,4 +23,20 @@ public enum SearchType {
                 return "SHOULDNT HAPPEN";
         }
     }
+    public static int toInteger(SearchType type) {
+        switch (type) {
+            case USER:
+                return 0;
+            case PAGE:
+                return 1;
+            case EVENTS:
+                return 2;
+            case PLACE:
+                return 3;
+            case GROUP:
+                return 4;
+            default:
+                return -1;
+        }
+    }
 }

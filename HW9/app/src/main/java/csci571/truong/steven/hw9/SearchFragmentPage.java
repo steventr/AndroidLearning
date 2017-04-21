@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import csci571.truong.steven.hw9.dummy.DummyContent;
 import csci571.truong.steven.hw9.dummy.DummyContent.DummyItem;
+import csci571.truong.steven.hw9.models.SearchResultObject;
 
 import java.util.List;
 
@@ -38,10 +39,10 @@ public class SearchFragmentPage extends Fragment  {
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static SearchFragmentPage newInstance(int columnCount) {
+    public static SearchFragmentPage newInstance(List<SearchResultObject> pageResults) {
         SearchFragmentPage fragment = new SearchFragmentPage();
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        //args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
         return fragment;
     }

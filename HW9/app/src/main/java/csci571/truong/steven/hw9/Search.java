@@ -88,7 +88,15 @@ public class Search extends AppCompatActivity implements NavigationView.OnNaviga
         return true;
     }
 
+    public void clear(View v) {
+
+    }
+
     public void submitSearch(View v) {
-        new SearchTask(this).execute(ENDPOINT);
+        Intent intent = new Intent(this, SearchResults.class);
+        EditText editText = (EditText) findViewById(R.id.searchInput);
+        String message = editText.getText().toString();
+        intent.putExtra(Search.SEARCH_QUERY, Search.ENDPOINT);
+        startActivity(intent);
     }
 }
