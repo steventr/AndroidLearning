@@ -2,6 +2,7 @@ package csci571.truong.steven.hw9;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -15,7 +16,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import csci571.truong.steven.hw9.models.PagingObject;
 import csci571.truong.steven.hw9.models.SearchResultObject;
 import csci571.truong.steven.hw9.models.SearchType;
 
@@ -80,24 +83,28 @@ public class SearchTask extends AsyncTask<String, String, String[]> {
 
     @Override
     protected void onPostExecute(String[] responseJSONs) {
-        ArrayList<SearchResultObject[]> response = new ArrayList<SearchResultObject[]>();
+        ArrayList<SearchResultObject[]> searchResultObjects = new ArrayList<SearchResultObject[]>();
+        ArrayList<PagingObject> pagingObjects = new ArrayList<PagingObject>();
+
         for (String json : responseJSONs) {
             JsonElement jelement = new JsonParser().parse(json);
             JsonObject jobject = jelement.getAsJsonObject();
             JsonArray resultsJsonArray = jobject.getAsJsonArray("data");
-            String result = resultsJsonArray.toString();
-
-            response.add(SearchResultObject.parseJSON(result));
+            String resultJSON = resultsJsonArray.toString();
+            searchResultObjects.add(SearchResultObject.parseJSON(resultJSON));
         }
 
-        adapter.updateResults(SearchType.USER, Arrays.asList(response.get(0)));
-        adapter.updateResults(SearchType.PAGE, Arrays.asList(response.get(1)));
-        adapter.updateResults(SearchType.EVENT, Arrays.asList(response.get(2)));
-        adapter.updateResults(SearchType.PLACE, Arrays.asList(response.get(3)));
-        adapter.updateResults(SearchType.GROUP, Arrays.asList(response.get(4)));
+        for (int i = 0; i < 5; i++) {
+            List<SearchResultObject> resultsList = Arrays.asList(searchResultObjects.get(i));
+            if ( resultsList.size() > 0) {
+                Log.d("TEST", "UPDATING " + SearchType.fromInteger(i).toString());
+                adapter.updateResults(SearchType.fromInteger(i), resultsList.subList(0, Math.min(11, resultsList.size())));
+            }
+        }
         adapter.notifyDataSetChanged();
-        ((SearchResults) context).setupTabIcons();
+        ((SearchResultsActivity) context).setupPages(searchResultObjects);
+        ((SearchResultsActivity) context).setupTabIcons();
     }
-}
 
+}
 

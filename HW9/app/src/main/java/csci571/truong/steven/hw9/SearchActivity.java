@@ -1,10 +1,7 @@
 package csci571.truong.steven.hw9;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,11 +12,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-public class Search extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
+public class SearchActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static final String ENDPOINT = "https://csci-571-162702.appspot.com/main.php?type=user&query=%27kurt%27";
     public static final String SEARCH_QUERY = "SEARCH_QUERY";
 
@@ -94,14 +89,14 @@ public class Search extends AppCompatActivity implements NavigationView.OnNaviga
     }
 
     public void submitSearch(View v) {
-        Intent intent = new Intent(this, SearchResults.class);
+        Intent intent = new Intent(this, SearchResultsActivity.class);
         EditText editText = (EditText) findViewById(R.id.searchInput);
         String message = editText.getText().toString();
         if (message.isEmpty()) {
             Toast.makeText(this, "Please enter a keyword!", Toast.LENGTH_LONG).show();
             return;
         }
-        intent.putExtra(Search.SEARCH_QUERY, message);
+        intent.putExtra(SearchActivity.SEARCH_QUERY, message);
         startActivity(intent);
     }
 }

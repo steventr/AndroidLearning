@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Search"
+            android:name=".SearchActivity"
             android:label="@string/title_activity_search"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SearchResults"
+            android:name=".SearchResultsActivity"
             android:label="@string/title_activity_search_results"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

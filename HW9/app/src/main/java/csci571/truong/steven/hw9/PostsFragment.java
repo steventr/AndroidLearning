@@ -10,9 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import csci571.truong.steven.hw9.models.SearchResultObject;
+import csci571.truong.steven.hw9.dummy.DummyContent;
+import csci571.truong.steven.hw9.dummy.DummyContent.DummyItem;
+import csci571.truong.steven.hw9.models.FBObjectInstance;
+import csci571.truong.steven.hw9.models.Post;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -21,30 +26,40 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class SearchFragmentPage extends Fragment  {
+public class PostsFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    private List<SearchResultObject> mData;
-    private MyItemRecyclerViewAdapter mAdapter;
-
+    private FBObjectInstance mData;
+    private String mProfileName, mProfilePictureURL;
+    private MyPostRecyclerViewAdapter mAdapter;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public SearchFragmentPage() {
-        mData = new ArrayList<SearchResultObject>();
+    public PostsFragment() {
+        mData = new FBObjectInstance();
     }
 
-    public static SearchFragmentPage newInstance(List<SearchResultObject> pageResults) {
-        SearchFragmentPage fragment = new SearchFragmentPage();
-        Bundle args = new Bundle();
-        //args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        fragment.mData = pageResults;
+    public void setData(FBObjectInstance data, String profileName, String profilePictureURL) {
+        if (data != null) {
+            mData = data;
+            if (mAdapter != null) {
+                updateContent(Arrays.asList(mData.getPosts()));
+            }
+            mProfileName = profileName;
+            mProfilePictureURL = profilePictureURL;
+        }
+    }
+
+
+
+    public static PostsFragment newInstance(FBObjectInstance data, String profileName, String profilePictureURL) {
+        PostsFragment fragment = new PostsFragment();
+        fragment.setData(data, profileName, profilePictureURL);
         return fragment;
     }
 
@@ -60,7 +75,7 @@ public class SearchFragmentPage extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_searchresult_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_post_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -71,9 +86,8 @@ public class SearchFragmentPage extends Fragment  {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            mAdapter =  new MyItemRecyclerViewAdapter(mData, getActivity(), mListener);
+            mAdapter = new MyPostRecyclerViewAdapter(Arrays.asList(mData.getPosts()), mListener, getContext(), mProfileName, mProfilePictureURL );
             recyclerView.setAdapter(mAdapter);
-
         }
         return view;
     }
@@ -108,6 +122,10 @@ public class SearchFragmentPage extends Fragment  {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(SearchResultObject item);
+        void onListFragmentInteraction(Post item);
+    }
+
+    public void updateContent(List<Post> newContent) {
+        mAdapter.update(newContent);
     }
 }

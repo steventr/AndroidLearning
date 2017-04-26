@@ -10,9 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import csci571.truong.steven.hw9.models.SearchResultObject;
+import csci571.truong.steven.hw9.dummy.DummyContent;
+import csci571.truong.steven.hw9.dummy.DummyContent.DummyItem;
+import csci571.truong.steven.hw9.models.FBObjectInstance;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,30 +22,28 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class SearchFragmentPage extends Fragment  {
+public class AlbumsFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    private List<SearchResultObject> mData;
-    private MyItemRecyclerViewAdapter mAdapter;
-
+    private FBObjectInstance mData;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
+     * @param data
      */
-    public SearchFragmentPage() {
-        mData = new ArrayList<SearchResultObject>();
+    public void setData(FBObjectInstance data) {
+        mData = data;
     }
 
-    public static SearchFragmentPage newInstance(List<SearchResultObject> pageResults) {
-        SearchFragmentPage fragment = new SearchFragmentPage();
-        Bundle args = new Bundle();
-        //args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        fragment.mData = pageResults;
+    // TODO: Customize parameter initialization
+    @SuppressWarnings("unused")
+    public static AlbumsFragment newInstance(FBObjectInstance data) {
+        AlbumsFragment fragment = new AlbumsFragment();
+        fragment.setData(data);
         return fragment;
     }
 
@@ -60,7 +59,7 @@ public class SearchFragmentPage extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_searchresult_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_album_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -71,9 +70,7 @@ public class SearchFragmentPage extends Fragment  {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            mAdapter =  new MyItemRecyclerViewAdapter(mData, getActivity(), mListener);
-            recyclerView.setAdapter(mAdapter);
-
+            recyclerView.setAdapter(new MyAlbumRecyclerViewAdapter(DummyContent.ITEMS, mListener));
         }
         return view;
     }
@@ -108,6 +105,6 @@ public class SearchFragmentPage extends Fragment  {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(SearchResultObject item);
+        void onListFragmentInteraction(DummyItem item);
     }
 }

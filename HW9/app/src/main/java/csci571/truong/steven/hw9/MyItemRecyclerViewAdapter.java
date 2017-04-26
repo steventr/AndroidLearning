@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,7 +18,8 @@ import java.util.List;
 
 
 public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
-
+    public static String PROFILE_NAME = "PROFILE_NAME";
+    public static String PROFILE_PICTURE = "PROFILE_PICTURE";
     private Context mContext;
     private final List<SearchResultObject> mValues;
     private final OnListFragmentInteractionListener mListener;
@@ -40,10 +40,10 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mItem = mValues.get(position);
         holder.mContentView.setText(mValues.get(position).getName());
-        Picasso.with(mContext).load(mValues.get(position).getPicture().getData().getUrl()).into((ImageView) holder.mView.findViewById(R.id.profilePicture));
+        Picasso.with(mContext).load(mValues.get(position).getPicture().getData().getSrc()).into((ImageView) holder.mView.findViewById(R.id.profilePicture));
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,8 +75,11 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, DetailsActivity.class);
-                intent.putExtra(Search.SEARCH_QUERY, Search.ENDPOINT);
+                intent.putExtra(PROFILE_NAME, mValues.get(position).getName());
+                intent.putExtra(PROFILE_PICTURE, mValues.get(position).getPicture().getData().getSrc());
+                intent.putExtra(SearchResultsActivity.DETAILS_ID, mValues.get(position).getId());
                 mContext.startActivity(intent);
+
             }
         });
     }
