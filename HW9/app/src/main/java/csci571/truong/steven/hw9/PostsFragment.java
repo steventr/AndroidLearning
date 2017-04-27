@@ -36,6 +36,7 @@ public class PostsFragment extends Fragment {
     private FBObjectInstance mData;
     private String mProfileName, mProfilePictureURL;
     private MyPostRecyclerViewAdapter mAdapter;
+    private View mView;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -75,12 +76,14 @@ public class PostsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_post_list, container, false);
+        mView = inflater.inflate(R.layout.fragment_post_list, container, false);
+
+        View mViewRecyclerView = mView.findViewById(R.id.list);
 
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+        if (mViewRecyclerView instanceof RecyclerView) {
+            Context context = mViewRecyclerView.getContext();
+            RecyclerView recyclerView = (RecyclerView) mViewRecyclerView;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
@@ -88,8 +91,13 @@ public class PostsFragment extends Fragment {
             }
             mAdapter = new MyPostRecyclerViewAdapter(Arrays.asList(mData.getPosts()), mListener, getContext(), mProfileName, mProfilePictureURL );
             recyclerView.setAdapter(mAdapter);
+
+            if (mData.getPosts().length == 0) {
+                mView.findViewById(R.id.noContent).setVisibility(View.VISIBLE);
+            }
         }
-        return view;
+
+        return mView;
     }
 
 

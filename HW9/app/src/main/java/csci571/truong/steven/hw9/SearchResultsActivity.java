@@ -1,13 +1,22 @@
 package csci571.truong.steven.hw9;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -17,6 +26,8 @@ import java.util.List;
 
 import csci571.truong.steven.hw9.models.SearchResultObject;
 import csci571.truong.steven.hw9.models.SearchType;
+
+import static android.location.LocationManager.GPS_PROVIDER;
 
 public class SearchResultsActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener, SearchFragmentPage.OnListFragmentInteractionListener {
     public static String DETAILS_ID = "DETAILS_ID";
@@ -36,6 +47,9 @@ public class SearchResultsActivity extends AppCompatActivity implements TabLayou
     private int[] currentPageNum;
 
     private Button previousButton, nextButton;
+
+    public boolean isShowingOnlyFavorites = false;
+
     public SearchResultsActivity() {
     }
 
@@ -45,13 +59,13 @@ public class SearchResultsActivity extends AppCompatActivity implements TabLayou
         mAdapter = new SearchPageAdapter(getSupportFragmentManager(), this);
 
         setContentView(R.layout.activity_search_results);
-        new SearchTask(this, mAdapter).execute(getIntent().getStringExtra(SearchActivity.SEARCH_QUERY));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         mViewPager = (ViewPager) findViewById(R.id.results_view);
@@ -109,6 +123,8 @@ public class SearchResultsActivity extends AppCompatActivity implements TabLayou
       });
 
         nextButton = (Button) findViewById(R.id.nextButton);
+        nextButton.setAlpha(.5f);
+        nextButton.setEnabled(false);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,6 +160,40 @@ public class SearchResultsActivity extends AppCompatActivity implements TabLayou
                 }
             }
         });
+
+        if (getIntent().getStringExtra(SearchActivity.SEARCH_QUERY) != null) {
+            new SearchTask(this, mAdapter, getIntent().getStringExtra("LOCATION")).execute(getIntent().getStringExtra(SearchActivity.SEARCH_QUERY));
+        }
+        else {
+            //Get Favorites, and build data.
+            ArrayList<ArrayList<SearchResultObject>> searchResultObjects = new ArrayList<ArrayList<SearchResultObject>>();
+            for (int i = 0; i < 5; i++) {
+                searchResultObjects.add(new ArrayList<SearchResultObject>());
+            }
+
+            for (SearchResultObject searchResultObject : Favorites.getInstance((Context) this).getFavorites()) {
+                searchResultObjects.get(SearchType.toInteger(searchResultObject.getType())).add(searchResultObject);
+            }
+
+            mData = new ArrayList<SearchResultObject[]>();
+            for (int i = 0; i < searchResultObjects.size(); i++) {
+                mData.add(searchResultObjects.get(i).toArray(new SearchResultObject[searchResultObjects.get(i).size()]));
+            }
+
+            for (int i = 0; i < 5; i++) {
+                List<SearchResultObject> resultsList = new ArrayList<SearchResultObject>();
+                for (int j = 0; j < mData.get(i).length; j++) {
+                    resultsList.add(mData.get(i)[j]);
+                }
+
+                if ( resultsList.size() > 0) {
+                    mAdapter.updateResults(SearchType.fromInteger(i), resultsList.subList(0, Math.min(11, resultsList.size())));
+                }
+            }
+            mAdapter.notifyDataSetChanged();
+            setupPages(mData);
+            isShowingOnlyFavorites = true;
+        }
 
         setupTabIcons();
     }
@@ -208,5 +258,34 @@ public class SearchResultsActivity extends AppCompatActivity implements TabLayou
             currentPageNum[i] = 1;
         }
         mData = searchResultObjects;
+
+        List<SearchResultObject> resultsList = Arrays.asList(mData.get(SearchType.toInteger(currentPage)));
+        int maxPages = (resultsList.size() / 10) + 1;
+        int pageNumber = currentPageNum[SearchType.toInteger(currentPage)];
+        if (pageNumber >= maxPages) {
+            nextButton.setAlpha(.5f);
+            nextButton.setEnabled(false);
+        }
+        else {
+            nextButton.setAlpha(1f);
+            nextButton.setEnabled(true);
+        }
+    }
+
+    @Override
+    public void onResume()
+    {  // After a pause OR at startup
+        super.onResume();
+        //Refresh your stuff here
+        mAdapter.notifyDataSetChanged();
+        setupTabIcons();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return true;
     }
 }

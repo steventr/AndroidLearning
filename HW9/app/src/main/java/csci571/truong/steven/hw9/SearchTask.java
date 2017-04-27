@@ -1,7 +1,15 @@
 package csci571.truong.steven.hw9;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import com.google.gson.JsonArray;
@@ -22,6 +30,9 @@ import csci571.truong.steven.hw9.models.PagingObject;
 import csci571.truong.steven.hw9.models.SearchResultObject;
 import csci571.truong.steven.hw9.models.SearchType;
 
+import static android.content.Context.LOCATION_SERVICE;
+import static android.location.LocationManager.GPS_PROVIDER;
+
 /**
  * Created by Steven on 4/17/2017.
  */
@@ -35,12 +46,14 @@ public class SearchTask extends AsyncTask<String, String, String[]> {
             "https://csci-571-162702.appspot.com/main.php?type=group&query="
     };
 
+    private String location;
     private Context context;
     private SearchPageAdapter adapter;
 
-    public SearchTask(Context context, SearchPageAdapter adapter) {
+    public SearchTask(Context context, SearchPageAdapter adapter, String l) {
         this.context = context;
         this.adapter = adapter;
+        location = l;
     }
 
     @Override
@@ -58,6 +71,9 @@ public class SearchTask extends AsyncTask<String, String, String[]> {
             HttpURLConnection urlConnection = null;
             try {
                 url = new URL(endpoints[i] + args[0]);
+                if (i == 3 && !location.isEmpty()) {
+                    url = new URL(endpoints[i] + args[0] + "&location=" + location);
+                }
                 urlConnection = (HttpURLConnection) url.openConnection();
                 InputStream in = urlConnection.getInputStream();
 
@@ -86,12 +102,18 @@ public class SearchTask extends AsyncTask<String, String, String[]> {
         ArrayList<SearchResultObject[]> searchResultObjects = new ArrayList<SearchResultObject[]>();
         ArrayList<PagingObject> pagingObjects = new ArrayList<PagingObject>();
 
+        int j = 0;
         for (String json : responseJSONs) {
             JsonElement jelement = new JsonParser().parse(json);
             JsonObject jobject = jelement.getAsJsonObject();
             JsonArray resultsJsonArray = jobject.getAsJsonArray("data");
             String resultJSON = resultsJsonArray.toString();
-            searchResultObjects.add(SearchResultObject.parseJSON(resultJSON));
+            SearchResultObject[] results = SearchResultObject.parseJSON(resultJSON);
+            for (SearchResultObject searchResultObject : results) {
+                searchResultObject.setType(SearchType.fromInteger(j));
+            }
+            searchResultObjects.add(results);
+            j++;
         }
 
         for (int i = 0; i < 5; i++) {
@@ -105,6 +127,5 @@ public class SearchTask extends AsyncTask<String, String, String[]> {
         ((SearchResultsActivity) context).setupPages(searchResultObjects);
         ((SearchResultsActivity) context).setupTabIcons();
     }
-
 }
 

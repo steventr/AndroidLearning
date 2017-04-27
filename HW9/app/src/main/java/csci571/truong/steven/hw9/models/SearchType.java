@@ -56,4 +56,21 @@ public enum SearchType {
                 return USER;
         }
     }
+
+    public String toString() {
+        switch (this) {
+            case USER:
+                return "user";
+            case PAGE:
+                return "page";
+            case EVENT:
+                return "event";
+            case PLACE:
+                return "place";
+            case GROUP:
+                return "group";
+            default:
+                return "SHOULDNT HAPPEN";
+        }
+    }
 }

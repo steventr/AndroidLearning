@@ -3,18 +3,18 @@ package csci571.truong.steven.hw9;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
+import android.widget.TextView;
 
-import csci571.truong.steven.hw9.dummy.DummyContent;
+import org.w3c.dom.Text;
+
+import java.util.Arrays;
+
 import csci571.truong.steven.hw9.dummy.DummyContent.DummyItem;
 import csci571.truong.steven.hw9.models.FBObjectInstance;
-
-import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -28,24 +28,29 @@ public class AlbumsFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
+    private View mView;
     private OnListFragmentInteractionListener mListener;
     private FBObjectInstance mData;
+    private ExpandableListView listView;
+    private AlbumExpandableListAdapter mAdapter;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      * @param data
      */
     public void setData(FBObjectInstance data) {
-        mData = data;
+        if (data != null) {
+            mData = data;
+            updateAlbumsFragment(mData);
+        }
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static AlbumsFragment newInstance(FBObjectInstance data) {
         AlbumsFragment fragment = new AlbumsFragment();
         fragment.setData(data);
         return fragment;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,22 +64,28 @@ public class AlbumsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_album_list, container, false);
-
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new MyAlbumRecyclerViewAdapter(DummyContent.ITEMS, mListener));
-        }
-        return view;
+        mView = inflater.inflate(R.layout.fragment_album_layout, container, false);
+        return mView;
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view,savedInstanceState);
+        listView = (ExpandableListView) mView.findViewById(R.id.lvExp);
+        if (listView.getAdapter() == null && mAdapter != null) {
+            listView.setAdapter(mAdapter);
+            listView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+                private int current = -1;
+                @Override
+                public void onGroupExpand(int groupPosition) {
+                    if (groupPosition != current) {
+                        listView.collapseGroup(current);
+                    }
+                    current = groupPosition;
+                }
+            });
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -85,6 +96,16 @@ public class AlbumsFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
+
+        if (mAdapter == null) {
+            if (mData != null ) {
+                mAdapter = new AlbumExpandableListAdapter(Arrays.asList(mData.getAlbums()), context);
+                    if (listView != null) {
+                        listView.setAdapter(mAdapter);
+                        listView.setGroupIndicator(null);
+                    }
+                }
+        }
     }
 
     @Override
@@ -93,6 +114,13 @@ public class AlbumsFragment extends Fragment {
         mListener = null;
     }
 
+    public void updateAlbumsFragment(FBObjectInstance data) {
+        mData = data;
+
+        if (mView != null) {
+            mView.findViewById(R.id.noContent).setVisibility(View.VISIBLE);
+        }
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

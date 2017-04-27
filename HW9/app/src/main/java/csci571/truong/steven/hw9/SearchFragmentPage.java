@@ -30,6 +30,7 @@ public class SearchFragmentPage extends Fragment  {
     private OnListFragmentInteractionListener mListener;
     private List<SearchResultObject> mData;
     private MyItemRecyclerViewAdapter mAdapter;
+    private SearchPageAdapter mSearchPageAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -39,12 +40,13 @@ public class SearchFragmentPage extends Fragment  {
         mData = new ArrayList<SearchResultObject>();
     }
 
-    public static SearchFragmentPage newInstance(List<SearchResultObject> pageResults) {
+    public static SearchFragmentPage newInstance(List<SearchResultObject> pageResults, SearchPageAdapter searchPageAdapter) {
         SearchFragmentPage fragment = new SearchFragmentPage();
         Bundle args = new Bundle();
         //args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
         fragment.mData = pageResults;
+        fragment.mSearchPageAdapter = searchPageAdapter;
         return fragment;
     }
 
@@ -71,7 +73,7 @@ public class SearchFragmentPage extends Fragment  {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            mAdapter =  new MyItemRecyclerViewAdapter(mData, getActivity(), mListener);
+            mAdapter =  new MyItemRecyclerViewAdapter(mData, getActivity(), mListener, mSearchPageAdapter);
             recyclerView.setAdapter(mAdapter);
 
         }

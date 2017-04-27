@@ -14,7 +14,10 @@ import csci571.truong.steven.hw9.PostsFragment.OnListFragmentInteractionListener
 import csci571.truong.steven.hw9.dummy.DummyContent.DummyItem;
 import csci571.truong.steven.hw9.models.Post;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -48,7 +51,14 @@ public class MyPostRecyclerViewAdapter extends RecyclerView.Adapter<MyPostRecycl
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mPostUser.setText(mUsername);
-        holder.mPostDate.setText(mValues.get(position).getCreated_time());
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date d = inputDateFormat.parse(mValues.get(position).getCreated_time());
+            holder.mPostDate.setText(outputDateFormat.format(d));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         holder.mPostMessage.setText(mValues.get(position).getMessage());
         holder.setProfilePicture(mProfileURL);
 

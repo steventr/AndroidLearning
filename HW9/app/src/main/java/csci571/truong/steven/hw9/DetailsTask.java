@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import csci571.truong.steven.hw9.models.Album;
 import csci571.truong.steven.hw9.models.FBObjectInstance;
+import csci571.truong.steven.hw9.models.Picture;
 import csci571.truong.steven.hw9.models.Post;
 import csci571.truong.steven.hw9.models.Posts;
 import csci571.truong.steven.hw9.models.SearchType;
@@ -82,18 +83,36 @@ public class DetailsTask extends AsyncTask<String, String, String> {
         JsonObject jobject = jelement.getAsJsonObject();
         FBObjectInstance details = FBObjectInstance.parseJSON(responseJSON);
 
-        String albumsJSON = jobject.get("albums").getAsJsonObject().get("data").getAsJsonArray().toString();
-        Album[] parsedAlbums = Album.parseJSON(albumsJSON);
+        if (jobject.get("albums") != null) {
+            String albumsJSON = jobject.get("albums").getAsJsonObject().get("data").getAsJsonArray().toString();
+            Album[] parsedAlbums = Album.parseJSON(albumsJSON);
 
-        details.setAlbums(parsedAlbums);
+            for (Album a : parsedAlbums) {
+                if (a.getPhotos() != null) {
+                    for (Picture p : a.getPhotos().getPhotos()) {
+                        new HDImageTask(context, p).execute(p.getData().getId());
+                    }
+                }
+            }
+            details.setAlbums(parsedAlbums);
+        }
+        else {
+            details.setAlbums(new Album[0]);
+        }
 
-        String postsJSON = jobject.get("posts").getAsJsonObject().get("data").getAsJsonArray().toString();
-        Post[] parsedPosts = Posts.parseJSON(postsJSON);
+        if (jobject.get("posts") != null) {
+            String postsJSON = jobject.get("posts").getAsJsonObject().get("data").getAsJsonArray().toString();
+            Post[] parsedPosts = Posts.parseJSON(postsJSON);
 
-        details.setPosts(parsedPosts);
+            details.setPosts(parsedPosts);
+        }
+        else {
+            details.setPosts(new Post[0]);
+        }
 
         adapter.setDetails(details, mProfileName, mProfilePicture);
         adapter.notifyDataSetChanged();
         ((DetailsActivity) context).setupTabIcons();
+
     }
 }

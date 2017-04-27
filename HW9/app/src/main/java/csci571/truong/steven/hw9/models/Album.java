@@ -17,6 +17,14 @@ public class Album {
     String name;
     Photos photos;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Photos getPhotos() {
         return photos;
     }
@@ -29,14 +37,16 @@ public class Album {
         JsonArray albumsJSONs = jelement.getAsJsonArray();
 
         for (int i = 0; i < albumsJSONs.size(); i++) {
-            JsonArray photos = albumsJSONs.get(i).getAsJsonObject().get("photos").getAsJsonObject().getAsJsonArray("data");
-            for (int j = 0; j < photos.size(); j++) {
-                JsonObject photo = photos.get(j).getAsJsonObject();
-                PictureData pd = gson.fromJson(photo.toString(), PictureData.class);
-                Picture picture = new Picture();
-                picture.setData(pd);
+            if ( albumsJSONs.get(i).getAsJsonObject().get("photos") != null) {
+                JsonArray photos = albumsJSONs.get(i).getAsJsonObject().get("photos").getAsJsonObject().getAsJsonArray("data");
                 jsonAsAlbums[i].getPhotos().clearPhotos();
-                jsonAsAlbums[i].getPhotos().addNewPhoto(picture);
+                for (int j = 0; j < photos.size(); j++) {
+                    JsonObject photo = photos.get(j).getAsJsonObject();
+                    PictureData pd = gson.fromJson(photo.toString(), PictureData.class);
+                    Picture picture = new Picture();
+                    picture.setData(pd);
+                    jsonAsAlbums[i].getPhotos().addNewPhoto(picture);
+                }
             }
         }
 

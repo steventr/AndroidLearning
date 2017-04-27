@@ -59,7 +59,7 @@ public class SearchPageAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Log.d("TEST", "GET ITEM POSITION: " + position);
-        return SearchFragmentPage.newInstance(results.get(position));
+        return SearchFragmentPage.newInstance(results.get(position), this);
     }
 
     @Override

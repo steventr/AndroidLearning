@@ -4,10 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="csci571.truong.steven.hw9.SearchActivity"
     tools:showIn="@layout/app_bar_search">
@@ -15,12 +11,33 @@
     <EditText
         android:id="@+id/searchInput"
         android:layout_width="match_parent"
-        android:layout_height="55dp" />
+        android:lines="1"
+        android:layout_margin="6dp"
+        android:textColor="@android:color/black"
+        android:background="@android:color/white"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:text="Enter a keyword:"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:layout_above="@id/searchInput"/>
 
     <LinearLayout
         android:layout_below="@id/searchInput"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@android:color/white" >
+
+        <Button
+            android:id="@+id/clear_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="CLEAR"
+            android:onClick="clear"/>
 
         <Button
             android:id="@+id/search_button"
@@ -29,13 +46,6 @@
             android:layout_weight="0.5"
             android:text="SEARCH"
             android:onClick="submitSearch"/>
-
-        <Button
-            android:id="@+id/clear_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="CLEAR"/>
 
     </LinearLayout>
 </RelativeLayout>
