@@ -5,8 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:background="@android:color/white"
     tools:context="csci571.truong.steven.hw9.SearchActivity"
     tools:showIn="@layout/app_bar_search">
+
+    <TextView
+        android:id="@+id/enterKeyword"
+        android:text="Enter a keyword:"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        />
 
     <EditText
         android:id="@+id/searchInput"
@@ -15,15 +25,8 @@
         android:layout_margin="6dp"
         android:textColor="@android:color/black"
         android:background="@android:color/white"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:text="Enter a keyword:"
-        android:textStyle="bold"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:layout_above="@id/searchInput"/>
+        android:layout_below="@id/enterKeyword"/>
 
     <LinearLayout
         android:layout_below="@id/searchInput"
@@ -48,4 +51,5 @@
             android:onClick="submitSearch"/>
 
     </LinearLayout>
+
 </RelativeLayout>

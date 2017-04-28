@@ -103,4 +103,19 @@ public class SearchPageAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return 5;
     }
+
+    public void removeUnfavorited() {
+        for (ArrayList<SearchResultObject> result : results) {
+            ArrayList<SearchResultObject> removeMe = new ArrayList<SearchResultObject>();
+            for (SearchResultObject searchResultObject : result) {
+                if (!Favorites.getInstance(context).exists(context, searchResultObject.getId())) {
+                    removeMe.add(searchResultObject);
+                }
+            }
+            for (SearchResultObject searchResultObject : removeMe) {
+                result.remove(searchResultObject);
+            }
+        }
+    }
+
 }

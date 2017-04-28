@@ -62,6 +62,7 @@ public class SearchResultsActivity extends AppCompatActivity implements TabLayou
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getWindow().setStatusBarColor(getResources().getColor(R.color.com_facebook_blue));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -276,6 +277,9 @@ public class SearchResultsActivity extends AppCompatActivity implements TabLayou
     public void onResume()
     {  // After a pause OR at startup
         super.onResume();
+        if (isShowingOnlyFavorites) {
+            mAdapter.removeUnfavorited();
+        }
         //Refresh your stuff here
         mAdapter.notifyDataSetChanged();
         setupTabIcons();

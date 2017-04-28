@@ -56,9 +56,11 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions( this, new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION },
+                    1337 );
+        } else {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 1, this);
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 1, this);
-
         input = (EditText) findViewById(R.id.searchInput);
     }
 
@@ -137,7 +139,7 @@ public class SearchActivity extends AppCompatActivity implements NavigationView.
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case 13337: {
+            case 1337: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

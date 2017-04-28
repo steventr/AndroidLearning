@@ -60,6 +60,7 @@ public class DetailsActivity extends AppCompatActivity implements TabLayout.OnTa
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getWindow().setStatusBarColor(getResources().getColor(R.color.com_facebook_blue));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
